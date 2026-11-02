@@ -10,6 +10,10 @@ get {
   auth: none
 }
 
+assert {
+  res.body.count: gt 0
+}
+
 tests {
   test("returns 200 with a task list", function () {
     expect(res.status).to.equal(200);
