@@ -1,0 +1,36 @@
+meta {
+  name: TC-10 done as a string is rejected
+  type: http
+  seq: 11
+  tags: [
+    regression
+    boundary
+  ]
+}
+
+post {
+  url: {{baseUrl}}/api/tasks
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "title": "Valid title",
+    "done": "yes"
+  }
+}
+
+assert {
+  res.status: eq 400
+}
+
+docs {
+  **Test case:** TC-10 (type check)  |  **Requirement:** REQ-07 done is true or false
+  **Test data:** done "yes" (a string, not a boolean)
+  **Expected:** 400.
+}

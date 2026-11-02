@@ -1,0 +1,38 @@
+meta {
+  name: Create Task (unique title)
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{baseUrl}}/api/tasks
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "title": "{{taskTitle}}",
+    "priority": "low"
+  }
+}
+
+script:pre-request {
+  // Pre-request: build test data before the request is sent
+  const title = "Episode task " + Date.now();
+  bru.setVar("taskTitle", title);
+  console.log("Creating:", title);
+}
+
+script:post-response {
+  // Post-response: read the reply and pass values on (request chaining)
+  bru.setVar("taskId", res.body.id);
+  console.log("New task id:", res.body.id, "status:", res.status);
+}
+
+tests {
+  test("created with the title the script made", function () {
+    expect(res.status).to.equal(201);
+    expect(res.body.title).to.equal(bru.getVar("taskTitle"));
+  });
+}

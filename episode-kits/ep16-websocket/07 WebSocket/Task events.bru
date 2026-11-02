@@ -1,0 +1,20 @@
+meta {
+  name: Task events
+  type: ws
+  seq: 1
+}
+
+ws {
+  url: ws://localhost:3000/ws
+  body: ws
+  auth: none
+}
+
+body:ws {
+  name: ping
+  type: text
+  selected: true
+  content: '''
+    ping
+  '''
+}

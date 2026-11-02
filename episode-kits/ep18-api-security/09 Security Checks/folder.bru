@@ -1,0 +1,12 @@
+meta {
+  name: 09 Security Checks
+  seq: 10
+}
+
+docs {
+  # Security checks (OWASP API Security Top 10, 2023)
+  Not a penetration test. These are cheap checks you keep in the suite, so a change that breaks a security rule fails the build.
+  Gaps these checks cannot fix on their own, and how to show them:
+  - No rate limit on login (API4): run "03 Negative Tests / Wrong Password" in the Runner with 25 iterations. Every attempt gets 401, none gets 429.
+  - No length limit on title (API4): a 50,000 character title is accepted.
+}

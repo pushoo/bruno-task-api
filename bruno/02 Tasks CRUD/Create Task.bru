@@ -1,0 +1,35 @@
+meta {
+  name: Create Task
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/tasks
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "title": "Record Bruno episode 1",
+    "priority": "high"
+  }
+}
+
+script:post-response {
+  // Save the new id for the next requests
+  bru.setVar("taskId", res.body.id);
+}
+
+tests {
+  test("returns 201 Created", function () {
+    expect(res.status).to.equal(201);
+  });
+  
+  test("task has the right fields", function () {
+    expect(res.body.id).to.be.a("string");
+    expect(res.body.title).to.equal("Record Bruno episode 1");
+    expect(res.body.done).to.equal(false);
+  });
+}

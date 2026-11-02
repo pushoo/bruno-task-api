@@ -1,0 +1,37 @@
+meta {
+  name: 3 Call create_task
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/mcp
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "jsonrpc": "2.0",
+    "id": 3,
+    "method": "tools/call",
+    "params": {
+      "name": "create_task",
+      "arguments": { "title": "Created through MCP", "priority": "high" }
+    }
+  }
+}
+
+script:post-response {
+  // Tool results come back as text — parse it to read the new task
+  const task = JSON.parse(res.body.result.content[0].text);
+  bru.setVar("mcpTaskId", task.id);
+}
+
+tests {
+  test("tool call succeeds", function () {
+    expect(res.body.result.isError).to.not.equal(true);
+    const task = JSON.parse(res.body.result.content[0].text);
+    expect(task.title).to.equal("Created through MCP");
+  });
+}

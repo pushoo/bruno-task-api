@@ -1,0 +1,4 @@
+# Bruno secrets: never commit these
+.env
+.env.*
+!.env.example

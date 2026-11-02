@@ -1,0 +1,58 @@
+meta {
+  name: TC-04 Create task with valid data returns 201
+  type: http
+  seq: 5
+  tags: [
+    smoke
+    regression
+  ]
+}
+
+post {
+  url: {{baseUrl}}/api/tasks
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "title": "{{uniqueTitle}}",
+    "priority": "high"
+  }
+}
+
+assert {
+  res.status: eq 201
+  res.body.priority: eq high
+  res.body.done: eq false
+}
+
+script:pre-request {
+  // Unique test data, so reruns never clash
+  bru.setVar("uniqueTitle", "QA task " + Date.now());
+}
+
+script:post-response {
+  bru.setVar("qaTaskId", res.body.id);
+}
+
+tests {
+  test("title matches the data we sent", function () {
+    expect(res.body.title).to.equal(bru.getVar("uniqueTitle"));
+  });
+
+  test("Location header points at the new task", function () {
+    expect(res.getHeader("location")).to.equal("/api/tasks/" + res.body.id);
+  });
+}
+
+docs {
+  **Test case:** TC-04  |  **Requirement:** REQ-03 Logged-in users create tasks
+  **Preconditions:** TC-02 ran (token saved).
+  **Test data:** A unique title made by the pre-request script, priority high.
+  **Expected:** 201, Location header, the same title and priority back, done is false.
+}

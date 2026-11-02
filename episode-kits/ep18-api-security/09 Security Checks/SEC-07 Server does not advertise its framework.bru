@@ -1,0 +1,26 @@
+meta {
+  name: SEC-07 Server does not advertise its framework
+  type: http
+  seq: 8
+  tags: [
+    security
+  ]
+}
+
+get {
+  url: {{baseUrl}}/health
+  body: none
+  auth: none
+}
+
+tests {
+  test("no X-Powered-By header", function () {
+    expect(res.getHeader("x-powered-by")).to.equal(undefined);
+  });
+}
+
+docs {
+  **OWASP API8: Security Misconfiguration**
+  The X-Powered-By header tells attackers which framework to target.
+  This check FAILS until you add one line to server.js:  app.disable('x-powered-by');
+}

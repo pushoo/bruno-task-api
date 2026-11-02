@@ -1,0 +1,27 @@
+meta {
+  name: TC-01 Health check returns 200
+  type: http
+  seq: 2
+  tags: [
+    smoke
+    regression
+  ]
+}
+
+get {
+  url: {{baseUrl}}/health
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.status: eq ok
+  res.responseTime: lt 1000
+}
+
+docs {
+  **Test case:** TC-01  |  **Requirement:** REQ-01 Service availability
+  **Steps:** Send GET /health.
+  **Expected:** 200, body status is "ok".
+}

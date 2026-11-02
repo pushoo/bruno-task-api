@@ -1,0 +1,51 @@
+// gRPC contract for the Task API. Served on localhost:50051 with server reflection,
+// so Bruno can discover these methods without importing this file.
+syntax = "proto3";
+
+package tasks.v1;
+
+service TaskService {
+  // Read: public
+  rpc ListTasks (ListTasksRequest) returns (ListTasksResponse);
+  rpc GetTask (GetTaskRequest) returns (Task);
+  // Write: send metadata  authorization: Bearer <token>
+  rpc CreateTask (CreateTaskRequest) returns (Task);
+  // Server streaming: one message per change, until you cancel
+  rpc WatchTasks (WatchTasksRequest) returns (stream TaskEvent);
+}
+
+message Task {
+  string id = 1;
+  string title = 2;
+  bool done = 3;
+  string priority = 4;
+  string created_at = 5;
+  string updated_at = 6;
+}
+
+message ListTasksRequest {
+  string priority = 1;  // "low", "medium", "high" or empty for all
+  string search = 2;    // text the title must contain
+}
+
+message ListTasksResponse {
+  int32 count = 1;
+  repeated Task tasks = 2;
+}
+
+message GetTaskRequest {
+  string id = 1;
+}
+
+message CreateTaskRequest {
+  string title = 1;
+  string priority = 2;  // defaults to "medium"
+}
+
+message WatchTasksRequest {}
+
+message TaskEvent {
+  string type = 1;  // task.created, task.updated, task.deleted, tasks.reset
+  Task task = 2;
+  string at = 3;
+}

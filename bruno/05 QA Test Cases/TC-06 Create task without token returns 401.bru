@@ -1,0 +1,31 @@
+meta {
+  name: TC-06 Create task without token returns 401
+  type: http
+  seq: 7
+  tags: [
+    regression
+    negative
+  ]
+}
+
+post {
+  url: {{baseUrl}}/api/tasks
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title": "Should never be saved"
+  }
+}
+
+assert {
+  res.status: eq 401
+}
+
+docs {
+  **Test case:** TC-06 (security)  |  **Requirement:** REQ-03
+  **Steps:** POST /api/tasks with a valid body and no Authorization header.
+  **Expected:** 401. The task must not be created.
+}

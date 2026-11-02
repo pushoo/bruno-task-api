@@ -1,0 +1,13 @@
+auth {
+  mode: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  Collection-level auth: every request set to "inherit" sends Authorization: Bearer {{token}}.
+  The token comes from 01 Setup / Login (post-response script).
+  Requests that must NOT send a token (Login, the "without token" negative tests) stay on "No Auth".
+}

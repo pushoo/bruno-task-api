@@ -1,0 +1,26 @@
+meta {
+  name: 2 List Tools
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/mcp
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "jsonrpc": "2.0",
+    "id": 2,
+    "method": "tools/list"
+  }
+}
+
+tests {
+  test("all 5 task tools are listed", function () {
+    const names = res.body.result.tools.map(function (t) { return t.name; });
+    expect(names).to.include.members(["list_tasks", "get_task", "create_task", "update_task", "delete_task"]);
+  });
+}

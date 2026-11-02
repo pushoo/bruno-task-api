@@ -1,0 +1,18 @@
+meta {
+  name: 05 QA Test Cases
+  seq: 5
+}
+
+docs {
+  # QA test cases for the Task API
+  One request = one test case. Names say what is tested and the expected result.
+  Each request's Docs tab holds the test case ID, the requirement, steps and expected result.
+
+  Tags: smoke (quick check), regression (everything), negative, boundary.
+  TC-00 and TC-02 carry every tag, because the other tests need fresh data and a token.
+
+  Run from the terminal:
+    bru run "05 QA Test Cases" --env Local --tags smoke
+    bru run "05 QA Test Cases" --env Local --tags negative,boundary
+    bru run "05 QA Test Cases" --env Local --reporter-html qa-report.html
+}

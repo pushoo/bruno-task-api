@@ -1,0 +1,29 @@
+{
+  "name": "task-api",
+  "version": "1.0.0",
+  "description": "Demo Task API (REST, GraphQL, WebSocket, gRPC, MCP) for the Bruno series",
+  "main": "server.js",
+  "scripts": {
+    "test": "cd bruno && bru run --env Local --exclude-tags app-only",
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "check:extras": "node scripts/check-extras.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@grpc/grpc-js": "^1.14.7",
+    "@grpc/proto-loader": "^0.8.1",
+    "@grpc/reflection": "^1.0.4",
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "express": "^4.22.3",
+    "graphql": "^16.14.2",
+    "graphql-http": "^1.23.1",
+    "ws": "^8.22.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@usebruno/cli": "^4.3.0"
+  }
+}

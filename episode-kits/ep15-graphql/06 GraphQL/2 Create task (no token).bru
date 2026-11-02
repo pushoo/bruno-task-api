@@ -1,0 +1,27 @@
+meta {
+  name: 2 Create task (no token)
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/graphql
+  body: graphql
+  auth: none
+}
+
+body:graphql {
+  mutation {
+    createTask(title: "No token here") {
+      id
+    }
+  }
+}
+
+tests {
+  test("GraphQL says 200 but returns an error", function () {
+    expect(res.status).to.equal(200);
+    expect(res.body.errors[0].extensions.code).to.equal("UNAUTHENTICATED");
+    expect(res.body.data).to.equal(null);
+  });
+}

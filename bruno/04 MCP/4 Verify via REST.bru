@@ -1,0 +1,18 @@
+meta {
+  name: 4 Verify via REST
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/tasks/{{mcpTaskId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("task made through MCP is visible in the REST API", function () {
+    expect(res.status).to.equal(200);
+    expect(res.body.title).to.equal("Created through MCP");
+  });
+}

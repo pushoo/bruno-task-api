@@ -1,0 +1,43 @@
+meta {
+  name: SEC-06 Broken JSON gives 400 without internals
+  type: http
+  seq: 7
+  tags: [
+    security
+  ]
+}
+
+post {
+  url: {{baseUrl}}/api/tasks
+  body: text
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:text {
+  { "title":
+}
+
+tests {
+  test("400, not a crash", function () {
+    expect(res.status).to.equal(400);
+  });
+
+  test("no stack trace or file paths", function () {
+    const text = JSON.stringify(res.body);
+    expect(text).to.not.include("at ");
+    expect(text).to.not.include("node_modules");
+  });
+}
+
+docs {
+  **OWASP API8: Security Misconfiguration (verbose errors)**
+  Send half a JSON body. The API must answer 400 and must not leak a stack trace.
+}

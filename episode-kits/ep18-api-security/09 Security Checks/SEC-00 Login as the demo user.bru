@@ -1,0 +1,33 @@
+meta {
+  name: SEC-00 Login as the demo user
+  type: http
+  seq: 1
+  tags: [
+    security
+  ]
+}
+
+post {
+  url: {{baseUrl}}/api/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "{{username}}",
+    "password": "{{password}}"
+  }
+}
+
+assert {
+  res.status: eq 200
+}
+
+script:post-response {
+  bru.setVar("token", res.body.token);
+}
+
+docs {
+  Precondition: get a real token for the checks below.
+}

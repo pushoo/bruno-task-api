@@ -1,0 +1,48 @@
+meta {
+  name: Login
+  type: http
+  seq: 1
+  tags: [
+    smoke
+    regression
+    negative
+    boundary
+  ]
+}
+
+post {
+  url: {{baseUrl}}/api/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "{{username}}",
+    "password": "{{password}}"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.tokenType: eq Bearer
+  res.body.expiresIn: eq 3600
+}
+
+script:post-response {
+  bru.setVar("token", res.body.token);
+}
+
+tests {
+  test("token is a non-empty string", function () {
+    expect(res.body.token).to.be.a("string").and.not.be.empty;
+  });
+}
+
+docs {
+  **Test case:** TC-02  |  **Requirement:** REQ-02 Users log in to change data
+  **Preconditions:** Environment has username and password.
+  **Steps:** POST /api/auth/login with the environment credentials.
+  **Expected:** 200, a token string, tokenType Bearer, expiresIn 3600.
+  **Note:** Tagged with every tag, because the other tests need its token.
+}

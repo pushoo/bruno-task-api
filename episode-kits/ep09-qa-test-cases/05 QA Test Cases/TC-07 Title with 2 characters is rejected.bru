@@ -1,0 +1,41 @@
+meta {
+  name: TC-07 Title with 2 characters is rejected
+  type: http
+  seq: 8
+  tags: [
+    regression
+    boundary
+  ]
+}
+
+post {
+  url: {{baseUrl}}/api/tasks
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "title": "ab"
+  }
+}
+
+assert {
+  res.status: eq 400
+}
+
+tests {
+  test("error mentions the title rule", function () {
+    expect(res.body.errors[0]).to.include("at least 3 characters");
+  });
+}
+
+docs {
+  **Test case:** TC-07 (boundary, just below the limit)  |  **Requirement:** REQ-05 Title has at least 3 characters
+  **Test data:** title "ab"
+  **Expected:** 400 with a title error.
+}

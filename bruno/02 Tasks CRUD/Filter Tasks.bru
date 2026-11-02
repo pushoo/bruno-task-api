@@ -1,0 +1,26 @@
+meta {
+  name: Filter Tasks
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/tasks?priority=high&done=true
+  body: none
+  auth: none
+}
+
+params:query {
+  priority: high
+  done: true
+}
+
+tests {
+  test("only high-priority, done tasks come back", function () {
+    expect(res.status).to.equal(200);
+    res.body.tasks.forEach(function (t) {
+      expect(t.priority).to.equal("high");
+      expect(t.done).to.equal(true);
+    });
+  });
+}

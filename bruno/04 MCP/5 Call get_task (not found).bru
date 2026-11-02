@@ -1,0 +1,30 @@
+meta {
+  name: 5 Call get_task (not found)
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/mcp
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "jsonrpc": "2.0",
+    "id": 5,
+    "method": "tools/call",
+    "params": {
+      "name": "get_task",
+      "arguments": { "id": "does-not-exist" }
+    }
+  }
+}
+
+tests {
+  test("tool reports an error result", function () {
+    expect(res.status).to.equal(200);
+    expect(res.body.result.isError).to.equal(true);
+  });
+}

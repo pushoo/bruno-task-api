@@ -1,0 +1,16 @@
+meta {
+  name: Reset Data
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/reset
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.tasks.length: eq 3
+}

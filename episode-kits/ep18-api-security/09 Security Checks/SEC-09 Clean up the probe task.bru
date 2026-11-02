@@ -1,0 +1,26 @@
+meta {
+  name: SEC-09 Clean up the probe task
+  type: http
+  seq: 10
+  tags: [
+    security
+  ]
+}
+
+delete {
+  url: {{baseUrl}}/api/tasks/{{secTaskId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+assert {
+  res.status: eq 204
+}
+
+docs {
+  Leave the data as we found it.
+}

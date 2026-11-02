@@ -1,0 +1,28 @@
+meta {
+  name: TC-11 Delete task returns 204
+  type: http
+  seq: 12
+  tags: [
+    regression
+  ]
+}
+
+delete {
+  url: {{baseUrl}}/api/tasks/{{qaTaskId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+assert {
+  res.status: eq 204
+}
+
+docs {
+  **Test case:** TC-11  |  **Requirement:** REQ-08 Logged-in users delete tasks
+  **Preconditions:** TC-04 created a task.
+  **Expected:** 204 and an empty body.
+}

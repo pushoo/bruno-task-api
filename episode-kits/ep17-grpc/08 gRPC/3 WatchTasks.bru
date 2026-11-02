@@ -1,0 +1,20 @@
+meta {
+  name: 3 WatchTasks
+  type: grpc
+  seq: 3
+}
+
+grpc {
+  url: localhost:50051
+  method: /tasks.v1.TaskService/WatchTasks
+  body: grpc
+  auth: none
+  methodType: server-streaming
+}
+
+body:grpc {
+  name: message 1
+  content: '''
+    {}
+  '''
+}

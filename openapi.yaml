@@ -1,0 +1,281 @@
+openapi: 3.0.3
+info:
+  title: Task API
+  version: 1.0.0
+  description: |
+    Demo API for the CISSP Coffee Shot Bruno series.
+    Reading tasks is public. Creating, changing and deleting tasks needs a Bearer token
+    from POST /api/auth/login. Demo credentials only: admin / password123.
+servers:
+  - url: http://localhost:3000
+    description: Real server (npm start)
+  - url: http://localhost:4000
+    description: Bruno mock server
+tags:
+  - name: Setup
+  - name: Tasks
+paths:
+  /health:
+    get:
+      tags: [Setup]
+      summary: Health check
+      operationId: healthCheck
+      responses:
+        '200':
+          description: Server is up
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: ok }
+                  uptime: { type: integer, example: 42 }
+              example: { status: ok, uptime: 42 }
+  /api/auth/login:
+    post:
+      tags: [Setup]
+      summary: Log in and get a Bearer token
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/LoginRequest' }
+            example: { username: admin, password: password123 }
+      responses:
+        '200':
+          description: Logged in
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/LoginResponse' }
+              example:
+                token: 3f6c2a9e-8d1b-4c7e-9a2f-5b8e1d4c7a90
+                tokenType: Bearer
+                expiresIn: 3600
+        '401':
+          description: Wrong username or password
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+              example: { error: Invalid username or password }
+  /api/reset:
+    post:
+      tags: [Setup]
+      summary: Put the data back to the 3 starter tasks
+      operationId: resetData
+      responses:
+        '200':
+          description: Data reset
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: { type: string, example: Data reset }
+                  tasks:
+                    type: array
+                    items: { $ref: '#/components/schemas/Task' }
+  /api/tasks:
+    get:
+      tags: [Tasks]
+      summary: List tasks
+      operationId: listTasks
+      parameters:
+        - name: done
+          in: query
+          schema: { type: boolean }
+          description: Only tasks with this done status
+        - name: priority
+          in: query
+          schema: { $ref: '#/components/schemas/Priority' }
+        - name: search
+          in: query
+          schema: { type: string }
+          description: Text the title must contain
+      responses:
+        '200':
+          description: The task list
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/TaskList' }
+              example:
+                count: 3
+                tasks:
+                  - { id: 1b4e28ba-2fa1-4d2b-883f-0016d3cca427, title: Install Bruno, done: true, priority: high, createdAt: '2026-11-02T09:00:00.000Z', updatedAt: '2026-11-02T09:00:00.000Z' }
+                  - { id: 6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b, title: Send my first API request, done: false, priority: medium, createdAt: '2026-11-02T09:00:00.000Z', updatedAt: '2026-11-02T09:00:00.000Z' }
+                  - { id: 9a1f3c55-7e2d-4b8a-a6c4-3d2e1f0b9c88, title: Test the MCP server, done: false, priority: low, createdAt: '2026-11-02T09:00:00.000Z', updatedAt: '2026-11-02T09:00:00.000Z' }
+    post:
+      tags: [Tasks]
+      summary: Create a task
+      operationId: createTask
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TaskInput' }
+            example: { title: Record Bruno episode 1, priority: high }
+      responses:
+        '201':
+          description: Created
+          headers:
+            Location:
+              schema: { type: string }
+              description: URL of the new task
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+              example: { id: 4c9d7e21-0b3a-4f6e-8d2c-1a5b9e7f3d60, title: Record Bruno episode 1, done: false, priority: high, createdAt: '2026-11-02T09:05:00.000Z', updatedAt: '2026-11-02T09:05:00.000Z' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /api/tasks/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string }
+    get:
+      tags: [Tasks]
+      summary: Get one task
+      operationId: getTask
+      responses:
+        '200':
+          description: The task
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+              example: { id: 4c9d7e21-0b3a-4f6e-8d2c-1a5b9e7f3d60, title: Record Bruno episode 1, done: false, priority: high, createdAt: '2026-11-02T09:05:00.000Z', updatedAt: '2026-11-02T09:05:00.000Z' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    put:
+      tags: [Tasks]
+      summary: Replace a task (every field)
+      operationId: replaceTask
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TaskInput' }
+            example: { title: Record and edit Bruno episode 1, priority: medium, done: false }
+      responses:
+        '200':
+          description: Replaced
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    patch:
+      tags: [Tasks]
+      summary: Change some fields of a task
+      operationId: updateTask
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TaskPatch' }
+            example: { done: true }
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    delete:
+      tags: [Tasks]
+      summary: Delete a task
+      operationId: deleteTask
+      security: [{ bearerAuth: [] }]
+      responses:
+        '204': { description: 'Deleted, no body' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Token from POST /api/auth/login
+  schemas:
+    Priority:
+      type: string
+      enum: [low, medium, high]
+    Task:
+      type: object
+      required: [id, title, done, priority, createdAt, updatedAt]
+      properties:
+        id: { type: string, format: uuid }
+        title: { type: string, minLength: 3 }
+        done: { type: boolean }
+        priority: { $ref: '#/components/schemas/Priority' }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    TaskList:
+      type: object
+      properties:
+        count: { type: integer }
+        tasks:
+          type: array
+          items: { $ref: '#/components/schemas/Task' }
+    TaskInput:
+      type: object
+      required: [title]
+      properties:
+        title: { type: string, minLength: 3 }
+        priority: { $ref: '#/components/schemas/Priority' }
+        done: { type: boolean }
+    TaskPatch:
+      type: object
+      properties:
+        title: { type: string, minLength: 3 }
+        priority: { $ref: '#/components/schemas/Priority' }
+        done: { type: boolean }
+    LoginRequest:
+      type: object
+      required: [username, password]
+      properties:
+        username: { type: string }
+        password: { type: string }
+    LoginResponse:
+      type: object
+      properties:
+        token: { type: string }
+        tokenType: { type: string, example: Bearer }
+        expiresIn: { type: integer, example: 3600 }
+    Error:
+      type: object
+      properties:
+        error: { type: string }
+    ValidationErrors:
+      type: object
+      properties:
+        errors:
+          type: array
+          items: { type: string }
+  responses:
+    Unauthorized:
+      description: Missing or invalid Bearer token
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          example: { error: Missing or invalid Bearer token. Call POST /api/auth/login first. }
+    NotFound:
+      description: No task with that id
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          example: { error: Task not found }
+    ValidationError:
+      description: The body broke a rule
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ValidationErrors' }
+          example:
+            errors:
+              - title is required and must be at least 3 characters
+              - 'priority must be one of: low, medium, high'

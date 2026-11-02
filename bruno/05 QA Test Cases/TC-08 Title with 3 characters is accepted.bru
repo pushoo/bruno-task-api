@@ -1,0 +1,36 @@
+meta {
+  name: TC-08 Title with 3 characters is accepted
+  type: http
+  seq: 9
+  tags: [
+    regression
+    boundary
+  ]
+}
+
+post {
+  url: {{baseUrl}}/api/tasks
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "title": "abc"
+  }
+}
+
+assert {
+  res.status: eq 201
+  res.body.title: eq abc
+}
+
+docs {
+  **Test case:** TC-08 (boundary, exactly the limit)  |  **Requirement:** REQ-05
+  **Test data:** title "abc"
+  **Expected:** 201.
+}

@@ -1,0 +1,24 @@
+auth {
+  mode: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+script:pre-request {
+  // Guard: fail fast with a clear message when no environment is selected
+  if (!bru.getEnvName()) {
+    throw new Error("No environment selected. Pick Local (top right) before running.");
+  }
+  // Auto-login when there is no token yet
+  if (!bru.getVar("token") && req.getUrl().indexOf("/api/auth/login") === -1) {
+    const login = await bru.sendRequest({
+      method: "POST",
+      url: bru.interpolate("{{baseUrl}}/api/auth/login"),
+      headers: { "Content-Type": "application/json" },
+      data: { username: bru.getEnvVar("username"), password: bru.getEnvVar("password") }
+    });
+    bru.setVar("token", login.data.token);
+  }
+}

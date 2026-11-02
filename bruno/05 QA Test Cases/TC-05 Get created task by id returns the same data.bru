@@ -1,0 +1,26 @@
+meta {
+  name: TC-05 Get created task by id returns the same data
+  type: http
+  seq: 6
+  tags: [
+    regression
+  ]
+}
+
+get {
+  url: {{baseUrl}}/api/tasks/{{qaTaskId}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.id: eq {{qaTaskId}}
+  res.body.title: eq {{uniqueTitle}}
+}
+
+docs {
+  **Test case:** TC-05 (state check)  |  **Requirement:** REQ-04 Read a task by id
+  **Preconditions:** TC-04 created a task.
+  **Expected:** 200, the id and title match what TC-04 created.
+}

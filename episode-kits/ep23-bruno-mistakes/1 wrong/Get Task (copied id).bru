@@ -1,0 +1,15 @@
+meta {
+  name: Get Task (copied id)
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/tasks/9a1f3c55-7e2d-4b8a-a6c4-3d2e1f0b9c88
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+}

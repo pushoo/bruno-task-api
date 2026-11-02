@@ -1,0 +1,34 @@
+meta {
+  name: Login
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "{{username}}",
+    "password": "{{password}}"
+  }
+}
+
+script:post-response {
+  // Save the token so every other request can use it (request chaining)
+  bru.setVar("token", res.body.token);
+}
+
+tests {
+  test("login succeeds", function () {
+    expect(res.status).to.equal(200);
+  });
+
+  test("returns a Bearer token", function () {
+    expect(res.body.token).to.be.a("string");
+    expect(res.body.tokenType).to.equal("Bearer");
+  });
+}

@@ -1,0 +1,42 @@
+meta {
+  name: TC-09 Invalid priority is rejected
+  type: http
+  seq: 10
+  tags: [
+    regression
+    negative
+  ]
+}
+
+post {
+  url: {{baseUrl}}/api/tasks
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "title": "Valid title",
+    "priority": "urgent"
+  }
+}
+
+assert {
+  res.status: eq 400
+}
+
+tests {
+  test("error lists the allowed priorities", function () {
+    expect(res.body.errors[0]).to.equal("priority must be one of: low, medium, high");
+  });
+}
+
+docs {
+  **Test case:** TC-09  |  **Requirement:** REQ-06 Priority is low, medium or high
+  **Test data:** priority "urgent"
+  **Expected:** 400 listing the allowed values.
+}

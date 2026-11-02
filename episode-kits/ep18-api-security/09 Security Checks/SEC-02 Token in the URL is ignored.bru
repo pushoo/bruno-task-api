@@ -1,0 +1,30 @@
+meta {
+  name: SEC-02 Token in the URL is ignored
+  type: http
+  seq: 3
+  tags: [
+    security
+  ]
+}
+
+post {
+  url: {{baseUrl}}/api/tasks?token={{token}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title": "Token in the URL"
+  }
+}
+
+assert {
+  res.status: eq 401
+}
+
+docs {
+  **OWASP API2: Broken Authentication**
+  Tokens in URLs end up in logs, browser history and proxies. The API must only accept the Authorization header.
+  **Expected:** 401, even with a real token in the query string.
+}

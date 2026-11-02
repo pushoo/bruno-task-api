@@ -1,0 +1,6 @@
+caseId,title,priority,expectedStatus
+TC-20,Low priority task,low,201
+TC-21,Medium priority task,medium,201
+TC-22,High priority task,high,201
+TC-23,ab,high,400
+TC-24,Bad priority task,urgent,400

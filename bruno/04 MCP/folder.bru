@@ -1,0 +1,15 @@
+meta {
+  name: 04 MCP
+  seq: 4
+}
+
+headers {
+  Accept: application/json, text/event-stream
+  Content-Type: application/json
+}
+
+docs {
+  MCP over Streamable HTTP is JSON-RPC 2.0 sent as POST requests to /mcp.
+  Order: initialize -> tools/list -> tools/call.
+  The server runs stateless with JSON responses, so no session header is needed.
+}

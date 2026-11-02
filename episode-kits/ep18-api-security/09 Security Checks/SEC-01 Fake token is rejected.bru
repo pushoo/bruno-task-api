@@ -1,0 +1,34 @@
+meta {
+  name: SEC-01 Fake token is rejected
+  type: http
+  seq: 2
+  tags: [
+    security
+  ]
+}
+
+post {
+  url: {{baseUrl}}/api/tasks
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer 11111111-2222-3333-4444-555555555555
+}
+
+body:json {
+  {
+    "title": "Made with a fake token"
+  }
+}
+
+assert {
+  res.status: eq 401
+}
+
+docs {
+  **OWASP API2: Broken Authentication**
+  A token that looks real (a random UUID) but was never issued must not work.
+  **Expected:** 401.
+}

@@ -1,0 +1,21 @@
+meta {
+  name: Create Without Token
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/tasks
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title": "This should be rejected"
+  }
+}
+
+assert {
+  res.status: eq 401
+}

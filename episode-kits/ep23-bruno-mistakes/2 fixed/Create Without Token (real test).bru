@@ -1,0 +1,28 @@
+meta {
+  name: Create Without Token (real test)
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/tasks
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title": "Should fail without a token",
+    "priority": "high"
+  }
+}
+
+tests {
+  test("no token means 401", function () {
+    expect(res.status).to.equal(401);
+  });
+
+  test("nothing was created", function () {
+    expect(res.body).to.not.have.property("id");
+  });
+}

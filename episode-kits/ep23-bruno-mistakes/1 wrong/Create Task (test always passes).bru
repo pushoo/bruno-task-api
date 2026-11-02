@@ -1,0 +1,25 @@
+meta {
+  name: Create Task (test always passes)
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/tasks
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title": "Should fail without a token",
+    "priority": "high"
+  }
+}
+
+tests {
+  test("create works", function () {
+    expect(res.status).to.be.ok;
+    expect(res.body).to.exist;
+  });
+}

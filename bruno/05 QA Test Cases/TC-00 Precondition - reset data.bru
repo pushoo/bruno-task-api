@@ -1,0 +1,28 @@
+meta {
+  name: TC-00 Precondition - reset data
+  type: http
+  seq: 1
+  tags: [
+    smoke
+    regression
+    negative
+    boundary
+  ]
+}
+
+post {
+  url: {{baseUrl}}/api/reset
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.tasks.length: eq 3
+}
+
+docs {
+  **Test case:** TC-00 (precondition for every test in this folder)
+  **Purpose:** Start every run from the same 3 starter tasks, so results repeat.
+  **Expected:** 200, and exactly 3 tasks.
+}

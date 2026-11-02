@@ -1,0 +1,25 @@
+meta {
+  name: TC-12 Deleted task returns 404
+  type: http
+  seq: 13
+  tags: [
+    regression
+  ]
+}
+
+get {
+  url: {{baseUrl}}/api/tasks/{{qaTaskId}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 404
+  res.body.error: eq Task not found
+}
+
+docs {
+  **Test case:** TC-12 (state check)  |  **Requirement:** REQ-08
+  **Preconditions:** TC-11 deleted the task.
+  **Expected:** 404, error "Task not found".
+}

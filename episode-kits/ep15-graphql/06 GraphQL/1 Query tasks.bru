@@ -1,0 +1,40 @@
+meta {
+  name: 1 Query tasks
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/graphql
+  body: graphql
+  auth: none
+}
+
+body:graphql {
+  query Tasks($priority: Priority) {
+    tasks(priority: $priority) {
+      id
+      title
+      priority
+      done
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "priority": "high"
+  }
+}
+
+tests {
+  test("only high priority tasks, only the fields we asked for", function () {
+    expect(res.status).to.equal(200);
+    const tasks = res.body.data.tasks;
+    expect(tasks.length).to.be.above(0);
+    tasks.forEach(function (t) {
+      expect(t.priority).to.equal("high");
+      expect(t).to.not.have.property("createdAt");
+    });
+  });
+}

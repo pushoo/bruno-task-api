@@ -1,0 +1,12 @@
+meta {
+  name: 08 gRPC
+  seq: 9
+  tags: [
+    app-only
+  ]
+}
+
+docs {
+  gRPC on localhost:50051, contract in proto/tasks.proto, server reflection on.
+  Reads are public. CreateTask needs metadata  authorization: Bearer {{token}}
+}

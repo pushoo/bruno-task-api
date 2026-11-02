@@ -1,0 +1,9 @@
+node_modules/
+bruno/results.xml
+bruno/report.html
+.DS_Store
+# Bruno secrets: never commit these
+.env
+.env.*
+!.env.example
+reports/

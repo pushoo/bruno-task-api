@@ -1,0 +1,15 @@
+meta {
+  name: Confirm Deleted
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseUrl}}/api/tasks/{{taskId}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 404
+}

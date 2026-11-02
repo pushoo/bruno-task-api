@@ -1,0 +1,28 @@
+meta {
+  name: Create Task (pasted token)
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/tasks
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: 3f6c2a9e-8d1b-4c7e-9a2f-5b8e1d4c7a90
+}
+
+body:json {
+  {
+    "title": "Pasted token task",
+    "priority": "high"
+  }
+}
+
+tests {
+  test("task is created", function () {
+    expect(res.status).to.equal(201);
+  });
+}

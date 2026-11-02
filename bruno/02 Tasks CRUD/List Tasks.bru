@@ -1,0 +1,19 @@
+meta {
+  name: List Tasks
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/tasks
+  body: none
+  auth: none
+}
+
+tests {
+  test("returns 200 with a task list", function () {
+    expect(res.status).to.equal(200);
+    expect(res.body.tasks).to.be.an("array");
+    expect(res.body.count).to.equal(res.body.tasks.length);
+  });
+}

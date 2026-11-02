@@ -1,0 +1,27 @@
+auth {
+  mode: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+script:pre-request {
+  // Auto-login: runs before EVERY request in the collection.
+  // If we have no token yet, log in once and save it. Then every request is ready to go.
+  if (!bru.getVar("token") && req.getUrl().indexOf("/api/auth/login") === -1) {
+    const login = await bru.sendRequest({
+      method: "POST",
+      url: bru.interpolate("{{baseUrl}}/api/auth/login"),
+      headers: { "Content-Type": "application/json" },
+      data: { username: bru.getEnvVar("username"), password: bru.getEnvVar("password") }
+    });
+    bru.setVar("token", login.data.token);
+    console.log("Auto-login done, token saved");
+  }
+}
+
+docs {
+  Collection-level pre-request script: logs in automatically when there is no token yet.
+  Now any single request works on its own, even if you never ran 01 Setup / Login.
+}

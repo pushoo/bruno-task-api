@@ -1,0 +1,44 @@
+meta {
+  name: Create task from data row
+  type: http
+  seq: 2
+  tags: [
+    data-driven
+  ]
+}
+
+post {
+  url: {{baseUrl}}/api/tasks
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "title": "{{title}}",
+    "priority": "{{priority}}"
+  }
+}
+
+script:pre-request {
+  // No data file? Skip, so a normal full run stays green.
+  if (!bru.runner.iterationData.has("caseId")) {
+    bru.runner.skipRequest();
+  }
+}
+
+tests {
+  // Each CSV row arrives as iteration data
+  const row = bru.runner.iterationData.get();
+  test(row.caseId + ": " + row.title + " / " + row.priority + " returns " + row.expectedStatus, function () {
+    expect(res.status).to.equal(Number(row.expectedStatus));
+  });
+}
+
+docs {
+  Test data comes from each CSV row: caseId, title, priority, expectedStatus.
+}
