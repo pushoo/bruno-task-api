@@ -1,0 +1,32 @@
+meta {
+  name: SEC-05 Login error does not reveal which part was wrong
+  type: http
+  seq: 6
+  tags: [
+    security
+  ]
+}
+
+post {
+  url: {{baseUrl}}/api/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "no-such-user",
+    "password": "whatever"
+  }
+}
+
+assert {
+  res.status: eq 401
+  res.body.error: eq Invalid username or password
+}
+
+docs {
+  **User enumeration**
+  A wrong username must give the same message as a wrong password, or attackers learn which usernames exist.
+  **Expected:** 401 and the generic "Invalid username or password".
+}

@@ -1,0 +1,29 @@
+meta {
+  name: SEC-08 Unknown route returns a plain 404
+  type: http
+  seq: 9
+  tags: [
+    security
+  ]
+}
+
+get {
+  url: {{baseUrl}}/api/admin
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 404
+}
+
+tests {
+  test("404 body is short and plain", function () {
+    expect(Object.keys(res.body)).to.eql(["error"]);
+  });
+}
+
+docs {
+  **OWASP API9: Improper Inventory Management**
+  Guessing hidden routes should get a plain 404, with nothing about the server inside.
+}

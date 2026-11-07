@@ -8,6 +8,7 @@ const { attachWebSocket } = require('./src/ws');
 const { startGrpc } = require('./src/grpc');
 
 const app = express();
+app.disable('x-powered-by');
 app.use(express.json());
 
 // Simple request log so viewers can see each Bruno call hit the server

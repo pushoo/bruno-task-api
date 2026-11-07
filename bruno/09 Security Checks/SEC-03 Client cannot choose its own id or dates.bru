@@ -1,0 +1,47 @@
+meta {
+  name: SEC-03 Client cannot choose its own id or dates
+  type: http
+  seq: 4
+  tags: [
+    security
+  ]
+}
+
+post {
+  url: {{baseUrl}}/api/tasks
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "title": "Mass assignment probe",
+    "id": "i-pick-my-own-id",
+    "createdAt": "1999-01-01T00:00:00.000Z"
+  }
+}
+
+script:post-response {
+  bru.setVar("secTaskId", res.body.id);
+}
+
+tests {
+  test("server ignored our id", function () {
+    expect(res.status).to.equal(201);
+    expect(res.body.id).to.not.equal("i-pick-my-own-id");
+  });
+
+  test("server ignored our createdAt", function () {
+    expect(res.body.createdAt).to.not.equal("1999-01-01T00:00:00.000Z");
+  });
+}
+
+docs {
+  **OWASP API3: Broken Object Property Level Authorization (mass assignment)**
+  We send fields the client should never control: id, createdAt.
+  **Expected:** 201, but the server ignores them and makes its own.
+}

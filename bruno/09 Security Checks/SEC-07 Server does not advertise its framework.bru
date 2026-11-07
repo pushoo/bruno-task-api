@@ -1,0 +1,23 @@
+meta {
+  name: SEC-07 Server does not advertise its framework
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{baseUrl}}/health
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("no X-Powered-By header", function () {
+    expect(res.getHeader("x-powered-by")).to.equal(undefined);
+  });
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+  forwardAuthorizationHeader: false
+}
