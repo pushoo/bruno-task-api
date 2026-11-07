@@ -1,0 +1,20 @@
+meta {
+  name: 1 ListTasks
+  type: grpc
+  seq: 1
+}
+
+grpc {
+  url: localhost:50051
+  method: /tasks.v1.TaskService/ListTasks
+  body: grpc
+  auth: inherit
+  methodType: unary
+}
+
+body:grpc {
+  name: message 1
+  content: '''
+    {"priority": "high"}
+  '''
+}
