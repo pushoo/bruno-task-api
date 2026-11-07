@@ -1,0 +1,19 @@
+meta {
+  name: Task events
+  type: ws
+  seq: 1
+}
+
+ws {
+  url: ws://localhost:3000/ws
+  body: ws
+  auth: inherit
+}
+
+body:ws {
+  name: message 1
+  type: text
+  content: '''
+    ping
+  '''
+}
