@@ -24,6 +24,8 @@ jobs:
 
       - name: Run Bruno collection
         working-directory: bruno
+        env:
+          TASK_API_PASSWORD: ${{ secrets.TASK_API_PASSWORD }}
         run: npx bru run --env Local --exclude-tags app-only --reporter-junit results.xml --reporter-html report.html
 
       - name: Upload test reports
