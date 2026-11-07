@@ -1,0 +1,21 @@
+meta {
+  name: High Priority (from cURL)
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{baseUrl}}/api/tasks?priority=high
+  body: none
+  auth: inherit
+}
+
+params:query {
+  priority: high
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+  forwardAuthorizationHeader: false
+}
