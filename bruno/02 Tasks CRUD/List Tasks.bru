@@ -21,3 +21,65 @@ tests {
     expect(res.body.count).to.equal(res.body.tasks.length);
   });
 }
+
+example {
+  name: 3 starter tasks
+  
+  request: {
+    url: {{baseUrl}}/api/tasks
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      x-powered-by: Express
+      content-type: application/json; charset=utf-8
+      content-length: 576
+      etag: W/"240-CLyXnrhETu0dONzQxQ1EOW+cdug"
+      date: Sat, 07 Nov 2026 16:54:15 GMT
+      connection: keep-alive
+      keep-alive: timeout=5
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "count": 3,
+          "tasks": [
+            {
+              "id": "20a2e2de-0602-424c-b680-77827a5a64a7",
+              "title": "Install Bruno",
+              "done": true,
+              "priority": "high",
+              "createdAt": "2026-11-07T16:51:06.567Z",
+              "updatedAt": "2026-11-07T16:51:06.567Z"
+            },
+            {
+              "id": "5b9b6a21-e1a2-462c-a3e1-dadea7389d50",
+              "title": "Send my first API request",
+              "done": false,
+              "priority": "medium",
+              "createdAt": "2026-11-07T16:51:06.568Z",
+              "updatedAt": "2026-11-07T16:51:06.568Z"
+            },
+            {
+              "id": "d4d8a8eb-fff4-4b9b-aff8-ca73f04acf08",
+              "title": "Test the MCP server",
+              "done": false,
+              "priority": "low",
+              "createdAt": "2026-11-07T16:51:06.568Z",
+              "updatedAt": "2026-11-07T16:51:06.568Z"
+            }
+          ]
+        }
+      '''
+    }
+  }
+}

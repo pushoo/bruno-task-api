@@ -33,3 +33,51 @@ tests {
     expect(res.body.done).to.equal(false);
   });
 }
+
+example {
+  name: Created
+  
+  request: {
+    url: {{baseUrl}}/api/tasks
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "title": "Record Bruno episode 1",
+        "priority": "high"
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      x-powered-by: Express
+      location: /api/tasks/7a89c33f-fa7a-4189-b475-ed594980e88d
+      content-type: application/json; charset=utf-8
+      content-length: 187
+      etag: W/"bb-Cy9sG8cExu8yshdz7IRque2RmYg"
+      date: Sat, 07 Nov 2026 16:54:46 GMT
+      connection: keep-alive
+      keep-alive: timeout=5
+    }
+  
+    status: {
+      code: 201
+      text: Created
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "id": "7a89c33f-fa7a-4189-b475-ed594980e88d",
+          "title": "Record Bruno episode 1",
+          "done": false,
+          "priority": "high",
+          "createdAt": "2026-11-07T16:54:46.822Z",
+          "updatedAt": "2026-11-07T16:54:46.822Z"
+        }
+      '''
+    }
+  }
+}

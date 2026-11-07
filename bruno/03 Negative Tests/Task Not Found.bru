@@ -14,3 +14,39 @@ assert {
   res.status: eq 404
   res.body.error: eq Task not found
 }
+
+example {
+  name: Not found
+  
+  request: {
+    url: {{baseUrl}}/api/tasks/does-not-exist
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      x-powered-by: Express
+      content-type: application/json; charset=utf-8
+      content-length: 26
+      etag: W/"1a-D4dsL3U5Autp3bKNpxD/le70vNM"
+      date: Sat, 07 Nov 2026 16:55:26 GMT
+      connection: keep-alive
+      keep-alive: timeout=5
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "error": "Task not found"
+        }
+      '''
+    }
+  }
+}
