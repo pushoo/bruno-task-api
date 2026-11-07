@@ -1,0 +1,31 @@
+meta {
+  name: 4 Get one task
+  type: graphql
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/graphql
+  body: graphql
+  auth: none
+}
+
+body:graphql {
+  query Task($id: ID!) {
+    task(id: $id) {
+      title
+      done
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "id": "{{gqlTaskId}}"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.data.task.title: eq Created with GraphQL
+}
