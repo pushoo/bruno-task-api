@@ -1,5 +1,9 @@
 # Task API: demo app for the Bruno series
 
+[![API tests (Bruno)](https://github.com/pushoo/bruno-task-api/actions/workflows/api-tests.yml/badge.svg)](https://github.com/pushoo/bruno-task-api/actions/workflows/api-tests.yml)
+
+▶️ **Watch the series:** [Bruno API Testing: Zero to AI (MCP)](https://www.youtube.com/playlist?list=PLHMIP2ATqH5E) on [CISSP Coffee Shot](https://www.youtube.com/@CISSP-COFFEE-SHOT) (23 episodes)
+
 A small Node.js app that speaks REST, GraphQL, WebSocket, gRPC and MCP, all backed by one in-memory task store.
 It comes with a ready-to-open Bruno collection that tests it. Built for the CISSP Coffee Shot series
 "Bruno API Testing: Zero to AI (MCP)".
@@ -35,6 +39,24 @@ From the terminal:
 npm test               # bru run --env Local --exclude-tags app-only
 npm run check:extras   # quick checks for OpenAPI, GraphQL, WebSocket and gRPC (server must be running)
 ```
+
+## CI/CD with GitHub Actions
+
+Every push and pull request runs `.github/workflows/api-tests.yml`:
+
+1. Check out the code and install Node 22 (`npm ci`).
+2. Start the Task API and wait for `/health`.
+3. Run the Bruno collection with the CLI: `bru run --env Local --exclude-tags app-only`.
+4. Upload the JUnit (`results.xml`) and HTML (`report.html`) reports as the **bruno-reports** artifact.
+
+The login password is not in the repo. Add it once under **Settings, Secrets and variables, Actions**:
+
+| Secret | Value |
+|---|---|
+| `TASK_API_PASSWORD` | the demo password from `src/auth.js` |
+
+Without the secret the run goes red (every protected request gets 401). With it, all 31 tests pass.
+A failing test fails the check on a pull request, so broken API changes never reach `main` unnoticed.
 
 ## REST endpoints
 
